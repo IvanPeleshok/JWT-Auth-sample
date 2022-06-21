@@ -13,7 +13,7 @@ class UserController {
 
             return res.json(userData);
         } catch (error) {
-            console.log(e);
+            console.log(error);
         }
     }
 
@@ -42,6 +42,14 @@ class UserController {
     }
 
     async refresh(req, res, next) {
+        try {
+            
+        } catch (error) {
+            
+        }
+    }
+
+    async getUsers(req, res, next) {
         try {
             
         } catch (error) {
