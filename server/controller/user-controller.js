@@ -4,11 +4,11 @@ const ApiError = require('../exceptions/api-error');
 const tokenService = require('../service/token-service');
 
 class UserController {
-    async regtistration(req, res, next) {
+    async registration(req, res, next) {
         try {
             const errors = validationResult(req);
 
-            if (errors.isEmpty()) {
+            if (!errors.isEmpty()) {
                 return next(ApiError.BadRequest('Ошибка при валидации', errors.array()));
             }
 
@@ -66,7 +66,7 @@ class UserController {
     async refresh(req, res, next) {
         try {
             const { refreshToken } = req.cookies;
-            const userData = userService.refresh(refreshToken);
+            const userData = await userService.refresh(refreshToken);
             res.cookie('refreshToken', userData.refreshToken, { 
                 maxAge: 30 * 24 * 3600 * 1000, 
                 httpOnly: true 

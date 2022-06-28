@@ -13,9 +13,10 @@ class UserService {
             throw ApiError.BadRequest(`Пользователь с почтовым адресов ${email} уже существует`);
         }
         const hashPassword = await bcrypt.hash(password, 5);
+        
         const activationLink = v4;
         const user = await UserModel.create({ email, password: hashPassword, activationLink });
-        await mailService.sendActivationMail(email, `${process.env.API_URL}/api/activate/${activationLink}`);
+        // await mailService.sendActivationMail(email, `${process.env.API_URL}/api/activate/${activationLink}`);
 
         const userDto = new UserDto(user);
         const tokens = tokenService.generateTokens({ ...userDto });
@@ -70,7 +71,7 @@ class UserService {
         }
 
         const userData = UserModel.findById(user.id);
-        const userDto = new UserDto(userData);
+        const userDto = new UserDto(userData._id ? userData : user);
         const tokens = await tokenService.generateTokens({ ...userDto });
         await tokenService.saveToken(UserDto.id, tokens.refreshToken);
 
@@ -78,7 +79,7 @@ class UserService {
     }
 
     async getAllUsers() {
-        const users = await UserModel.find();\
+        const users = await UserModel.find();
         return users;
     }
 }
